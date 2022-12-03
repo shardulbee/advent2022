@@ -1,7 +1,7 @@
 type choice = Rock | Paper | Scissors
 type game = { opponent: choice ; mine: choice }
 type result = Win | Loss | Draw
-type game_two = { opponent: choice; result: result }
+type game_result = { opponent: choice; result: result }
 
 let value choice = match choice with
   | Rock -> 1
@@ -30,21 +30,16 @@ let lines_from_file ic =
     | line -> lines_from_file_aux ic (line :: acc) in
   lines_from_file_aux ic []
 
-let one_for_two game2 =
-  let draw_func opponent = opponent in
-    let loss_func opponent = match opponent with
-      | Rock -> Scissors
-      | Paper -> Rock
-      | Scissors -> Paper in
-    let win_func opponent = match opponent with
-      | Rock -> Paper
-      | Paper -> Scissors
-      | Scissors -> Rock in
-      let mine_func = match game2.result with
-        | Draw -> draw_func
-        | Win -> win_func
-        | Loss -> loss_func in
-      { opponent = game2.opponent; mine = mine_func game2.opponent  }
+let game_for_result (game : game_result) =
+  let my_choice = match (game.opponent, game.result) with
+    | (Rock, Win) -> Paper
+    | (Rock, Loss) -> Scissors
+    | (Paper, Win) -> Scissors
+    | (Paper, Loss) -> Rock
+    | (Scissors, Win) -> Rock
+    | (Scissors, Loss) -> Paper
+    | (_, Draw) -> game.opponent in
+  { mine = my_choice ; opponent = game.opponent }
 
 exception Invalid_input;;
 
@@ -98,13 +93,13 @@ let part_one_test =
 
 let part_two_test =
   let games = parse_lines parse_two (["A Y"; "B X"; "C Z"]) in
-  let scores = List.map score (List.map (one_for_two) games) in
-  List.fold_left (+) 0 scores
+    let scores = List.map score (List.map (game_for_result) games) in
+    List.fold_left (+) 0 scores
 
 let part_two =
   let ic = open_in (day_to_file 2) in
     let games = parse_lines parse_two (lines_from_file ic) in
-    let scores = List.map score (List.map (one_for_two) games) in
+    let scores = List.map score (List.map (game_for_result) games) in
     List.fold_left (+) 0 scores
 
 let () =
