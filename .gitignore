@@ -1,1 +1,4 @@
 program
+*.o
+*.cmx
+*.cmi
