@@ -91,8 +91,7 @@ let rec parse_lines parse_func lines =
 
 let day_to_file day = "./data/day" ^ string_of_int day ^ ".data"
 
-let part_one =
-  let ic = open_in (day_to_file 2) in
+let part_one ic =
   let games = parse_lines parse_one (lines_from_file ic) in
   let scores = List.map score games in
   List.fold_left ( + ) 0 scores
@@ -107,14 +106,13 @@ let part_two_test =
   let scores = List.map score (List.map game_for_result games) in
   List.fold_left ( + ) 0 scores
 
-let part_two =
-  let ic = open_in (day_to_file 2) in
+let part_two ic =
   let games = parse_lines parse_two (lines_from_file ic) in
   let scores = List.map score (List.map game_for_result games) in
   List.fold_left ( + ) 0 scores
 
-let () = print_endline ("Part 1 - test: " ^ string_of_int part_one_test);;
-
-print_endline ("Part 1: " ^ string_of_int part_one);;
-print_endline ("Part 2 - test: " ^ string_of_int part_two_test);;
-print_endline ("Part 2: " ^ string_of_int part_two)
+let run (spec : Runspec.spec) =
+  let ic = open_in spec.filename in
+  print_endline ("Part 1: " ^ string_of_int (part_one ic));
+  seek_in ic 0;
+  print_endline ("Part 2: " ^ string_of_int (part_two ic))

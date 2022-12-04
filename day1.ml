@@ -1,14 +1,5 @@
-let day_to_file day = "./data/day" ^ string_of_int day ^ ".data"
-
-let lines_from_file ic =
-  let rec lines_from_file_aux ic acc =
-    match input_line ic with
-    | exception End_of_file -> List.rev acc
-    | line -> lines_from_file_aux ic (line :: acc)
-  in
-  lines_from_file_aux ic []
-
-let lines_for_day day = lines_from_file (open_in (day_to_file day))
+open Input
+open Printf
 
 let group_calories lines =
   let rec group_calories_aux lines acc current_group =
@@ -25,7 +16,9 @@ let group_calories lines =
 let rec sum_groups groups =
   match groups with
   | [] -> []
-  | group :: rest -> List.fold_left ( + ) 0 group :: sum_groups rest
+  | group :: rest ->
+      let summed_group = List.fold_left ( + ) 0 group in
+      List.cons summed_group (sum_groups rest)
 
 let group_sum_max groups =
   let summed_groups = sum_groups groups in
@@ -36,18 +29,23 @@ let group_sum_max groups =
   in
   list_max summed_groups (-1)
 
-let part_one =
-  let ic = open_in (day_to_file 1) in
+let part_one ic =
   let groups = group_calories (lines_from_file ic) in
   print_endline ("Part 1: " ^ string_of_int (group_sum_max groups))
 
-let part_two =
-  let ic = open_in (day_to_file 1) in
+let part_two ic =
   let groups = group_calories (lines_from_file ic) in
   let summed_groups = sum_groups groups in
+
   let first_three =
     Array.sub (Array.of_list (List.rev (List.sort compare summed_groups))) 0 3
   in
   let result = Array.fold_left ( + ) 0 first_three in
-  print_endline ("Part 1: " ^ string_of_int result);
+  print_endline ("Part 2: " ^ string_of_int result);
   close_in ic
+
+let run (spec : Runspec.spec) =
+  let ic = open_in spec.filename in
+  part_one ic;
+  seek_in ic 0;
+  part_two ic
