@@ -2,4 +2,4 @@ program
 *.o
 *.cmx
 *.cmi
-./advent2022
+advent2022
