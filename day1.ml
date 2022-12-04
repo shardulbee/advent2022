@@ -30,11 +30,11 @@ let group_sum_max groups =
   list_max summed_groups (-1)
 
 let part_one ic =
-  let groups = group_calories (lines_from_file ic) in
+  let groups = group_calories (Input.lines_of_in_channel ic) in
   print_endline ("Part 1: " ^ string_of_int (group_sum_max groups))
 
 let part_two ic =
-  let groups = group_calories (lines_from_file ic) in
+  let groups = group_calories (Input.lines_of_in_channel ic) in
   let summed_groups = sum_groups groups in
 
   let first_three =

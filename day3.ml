@@ -77,7 +77,7 @@ let part_two input =
 
 let run (spec : Runspec.spec) =
   let ic = open_in spec.filename in
-  let input = Input.lines_from_file ic in
+  let input = Input.lines_of_in_channel ic in
   part_one input;
   part_two input;
   close_in ic
