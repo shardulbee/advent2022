@@ -6,6 +6,7 @@ let day_of_int day_num : Runspec.spec -> unit =
   | 4 -> Day4.run
   | 5 -> Day5.run
   | 6 -> Day6.run
+  | 7 -> Day7.run
   | n ->
       failwith
         (Format.sprintf "Have not implemented solution for day %d yet." n)
